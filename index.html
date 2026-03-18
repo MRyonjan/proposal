@@ -3,241 +3,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI System // Proposal</title>
+  <title>AI Proposal Interface</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #04060a;
-      --card: #0b0f19;
+      --bg: #03060f;
+      --card: #0c1022;
       --accent: #7b5bff;
       --accent2: #23d2ff;
       --text: #e8eeff;
       --muted: #9db2d4;
       --love: #ff5f9f;
+      --glow: 0 0 18px rgba(35,210,255,0.28);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0; min-height: 100vh;
-      background: radial-gradient(circle at 20% 20%, #11162a 0, #04060a 35%, #010308 70%);
-      color: var(--text);
       font-family: 'Space Mono', monospace;
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
-      overflow: hidden;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, #0c1131 0, #03060f 40%, #010308 70%);
+      overflow-x: hidden;
     }
-    .frame {
-      width: min(1100px, 95vw);
-      background: linear-gradient(135deg, rgba(35,210,255,0.08), rgba(123,91,255,0.08));
-      border: 1px solid rgba(123,91,255,0.3);
-      border-radius: 18px;
-      padding: clamp(18px, 4vw, 32px);
-      box-shadow: 0 20px 80px rgba(0,0,0,0.45), 0 0 30px rgba(35,210,255,0.12);
-      position: relative;
-      overflow: hidden;
+    .stars, .stars2, .stars3 {
+      position: fixed; width: 200%; height: 200%;
+      background-repeat: repeat;
+      background-size: 2px 2px;
+      pointer-events: none; z-index: 0;
     }
-    /* Scan grid background */
-    .frame::before, .frame::after {
-      content: "";
-      position: absolute; inset: 0;
-      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 24px),
-                  repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 24px);
-      mask-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.18), transparent 70%);
-      pointer-events: none;
-    }
-    .frame::after {
-      background: radial-gradient(circle at 20% 10%, rgba(123,91,255,0.25), transparent 35%),
-                  radial-gradient(circle at 80% 20%, rgba(35,210,255,0.25), transparent 40%);
-      mix-blend-mode: screen;
-      opacity: .35;
-      filter: blur(18px);
-    }
+    .stars { background-image: radial-gradient(1px 1px at 1px 1px, rgba(255,255,255,0.8), transparent); animation: drift 120s linear infinite; opacity:.35;}
+    .stars2{ background-image: radial-gradient(2px 2px at 2px 2px, rgba(123,91,255,0.55), transparent); animation: drift 160s linear infinite reverse; opacity:.25;}
+    .stars3{ background-image: radial-gradient(2px 2px at 2px 2px, rgba(35,210,255,0.4), transparent); animation: drift 200s linear infinite; opacity:.2;}
+    @keyframes drift { from { transform: translate3d(0,0,0);} to { transform: translate3d(-200px,-200px,0);} }
 
-    .terminal {
-      min-height: 60vh;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: clamp(18px, 3vw, 28px);
-      align-items: center;
-      transition: filter .4s ease, transform .4s ease;
+    .frame {
+      position: relative; z-index: 1;
+      width: min(1200px, 95vw);
+      margin: clamp(18px, 4vw, 32px) auto;
+      border: 1px solid rgba(123,91,255,0.35);
+      border-radius: 20px;
+      padding: clamp(18px, 3vw, 32px);
+      background: linear-gradient(135deg, rgba(35,210,255,0.08), rgba(123,91,255,0.08));
+      box-shadow: 0 25px 90px rgba(0,0,0,0.5), 0 0 32px rgba(35,210,255,0.12);
+      overflow: hidden;
     }
-    @media (max-width: 860px) {
-      .terminal { grid-template-columns: 1fr; }
+    .grid {
+      display: grid; gap: clamp(16px, 3vw, 24px);
+      grid-template-columns: 1.15fr 0.85fr;
     }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
 
     .panel {
-      background: linear-gradient(145deg, #0c1120, #090c17);
-      border: 1px solid rgba(123,91,255,0.25);
-      border-radius: 14px;
+      background: linear-gradient(145deg, #0e1328, #0b0f1f);
+      border: 1px solid rgba(123,91,255,0.28);
+      border-radius: 16px;
       padding: clamp(14px, 3vw, 20px);
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 25px rgba(123,91,255,0.05), 0 10px 25px rgba(0,0,0,0.35);
+      box-shadow: inset 0 0 22px rgba(123,91,255,0.07), 0 10px 32px rgba(0,0,0,0.35);
     }
     .panel::before {
-      content:"";
-      position:absolute; inset:-30%; 
-      background: conic-gradient(from 90deg at 50% 50%, rgba(123,91,255,0.12), rgba(35,210,255,0.08), rgba(123,91,255,0.12));
-      filter: blur(40px);
-      opacity: 0.35;
+      content:""; position:absolute; inset:-35%;
+      background: conic-gradient(from 90deg, rgba(123,91,255,0.14), rgba(35,210,255,0.1), rgba(123,91,255,0.14));
+      filter: blur(38px); opacity:.35; pointer-events:none;
     }
-    .panel h2 {
-      margin: 0 0 12px 0;
-      font-size: 15px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--accent2);
-    }
-    .console {
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--muted);
-      min-height: 220px;
-      position: relative;
-    }
-    .cursor {
-      display: inline-block;
-      width: 9px; height: 16px;
-      background: var(--accent2);
-      margin-left: 4px;
-      animation: blink .9s steps(1) infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
+    h2 { margin:0 0 12px; font-size:14px; letter-spacing:.14em; color: var(--accent2); text-transform: uppercase; }
+    .console { min-height:240px; font-size:15px; line-height:1.6; color: var(--muted); }
+    .cursor { display:inline-block; width:9px; height:16px; background:var(--accent2); margin-left:4px; animation: blink .9s steps(1) infinite; }
+    @keyframes blink { 50%{opacity:0;} }
 
-    /* Photo strip */
-    .photos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-    }
-    .photo {
-      position: relative;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(123,91,255,0.28);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 20px rgba(35,210,255,0.08);
-      aspect-ratio: 3/4;
-      background: #11172b;
-    }
-    .photo img {
-      width: 100%; height: 100%; object-fit: cover;
-      filter: saturate(1.15) contrast(1.05);
-      transition: transform .6s ease;
-    }
+    .photos { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:12px; }
+    .photo { position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(123,91,255,0.3); aspect-ratio:3/4; background:#0f152d; box-shadow: var(--glow);}
+    .photo img { width:100%; height:100%; object-fit:cover; filter:saturate(1.1); transition: transform .6s ease; }
     .photo:hover img { transform: scale(1.05); }
-    .tag {
-      position: absolute; left: 10px; bottom: 10px;
-      background: rgba(4, 6, 10, 0.76);
-      border: 1px solid rgba(123,91,255,0.5);
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 12px;
-      color: var(--accent2);
-      box-shadow: 0 0 12px rgba(35,210,255,0.25);
+    .tag { position:absolute; left:10px; bottom:10px; padding:6px 10px; border-radius:8px; background:rgba(5,8,16,0.82); border:1px solid rgba(123,91,255,0.45); font-size:12px; color:var(--accent2); box-shadow: 0 0 10px rgba(35,210,255,0.25); }
+
+    .timeline { display:flex; flex-direction:column; gap:10px; font-family:'Inter',sans-serif; }
+    .event { padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(123,91,255,0.15); display:flex; align-items:center; gap:10px; }
+    .dot { width:10px; height:10px; border-radius:50%; background:var(--accent2); box-shadow: 0 0 12px rgba(35,210,255,0.6); }
+    .event small { color: var(--muted); letter-spacing:.04em; }
+
+    .wave-wrap { position:relative; height:140px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px solid rgba(123,91,255,0.2); overflow:hidden;}
+    .wave { position:absolute; inset:0; }
+    .meter { display:flex; align-items:center; gap:12px; margin-top:12px; }
+    .bar { flex:1; height:10px; border-radius:6px; background: linear-gradient(90deg, #23d2ff, #7b5bff, #ff5f9f); box-shadow: var(--glow); position:relative; overflow:hidden;}
+    .bar::after{content:""; position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,0.4), transparent 50%, rgba(255,255,255,0.4)); animation: shimmer 2s linear infinite;}
+    @keyframes shimmer { from{transform:translateX(-100%);} to{transform:translateX(100%);} }
+
+    .glitch { position:relative; color:var(--text); font-size: clamp(26px, 3vw, 32px); letter-spacing:.04em; filter: drop-shadow(0 0 6px rgba(35,210,255,0.35)); animation: glitch 1.4s infinite steps(2);}
+    .glitch::before, .glitch::after{ content: attr(data-text); position:absolute; left:0; top:0; opacity:.75; mix-blend-mode: lighten;}
+    .glitch::before{ color:#23d2ff; transform: translate(2px,-2px); }
+    .glitch::after{ color:#7b5bff; transform: translate(-2px,2px); }
+    @keyframes glitch{
+      0%,14%{clip-path: inset(0 0 0 0);}
+      15%,29%{clip-path: inset(30% 0 55% 0); transform: translate(-2px,2px);}
+      30%,44%{clip-path: inset(60% 0 20% 0); transform: translate(2px,-2px);}
+      45%,59%{clip-path: inset(0 0 0 0);}
+      60%,74%{clip-path: inset(15% 0 35% 0); transform: translate(1px,0);}
+      75%,100%{clip-path: inset(0 0 0 0);}
     }
 
-    /* Glitch */
-    .glitch {
-      position: relative;
-      color: var(--text);
-      font-size: clamp(26px, 3vw, 32px);
-      letter-spacing: .04em;
-      filter: drop-shadow(0 0 6px rgba(35,210,255,0.35));
-      animation: glitch 1.4s infinite steps(2);
-    }
-    .glitch::before, .glitch::after {
-      content: attr(data-text);
-      position: absolute; left: 0; top: 0;
-      opacity: .75;
-      mix-blend-mode: lighten;
-    }
-    .glitch::before { color: #23d2ff; transform: translate(2px, -2px); }
-    .glitch::after { color: #7b5bff; transform: translate(-2px, 2px); }
-    @keyframes glitch {
-      0%,14% { clip-path: inset(0 0 0 0); }
-      15%,29% { clip-path: inset(30% 0 55% 0); transform: translate(-2px, 2px); }
-      30%,44% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -2px); }
-      45%,59% { clip-path: inset(0 0 0 0); }
-      60%,74% { clip-path: inset(15% 0 35% 0); transform: translate(1px, 0); }
-      75%,100% { clip-path: inset(0 0 0 0); }
-    }
-
-    /* Reveal */
     .reveal {
-      text-align: center;
-      padding: clamp(18px, 4vw, 32px);
-      background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,95,159,0.08));
-      border-radius: 16px;
-      border: 1px solid rgba(255,95,159,0.35);
-      box-shadow: 0 15px 40px rgba(255,95,159,0.22);
-      font-family: 'Inter', sans-serif;
+      text-align:center; padding: clamp(18px, 4vw, 32px);
+      background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,95,159,0.12));
+      border-radius:16px; border:1px solid rgba(255,95,159,0.35);
+      box-shadow: 0 16px 42px rgba(255,95,159,0.24);
+      font-family:'Inter',sans-serif;
     }
-    .reveal h1 {
-      margin: 0 0 12px;
-      font-size: clamp(30px, 5vw, 44px);
-      color: #ffe7f2;
-      letter-spacing: .02em;
-    }
-    .reveal p {
-      margin: 6px 0;
-      color: #f9dce8;
-      font-size: clamp(16px, 2.5vw, 20px);
-    }
-    .buttons {
-      margin-top: 18px;
-      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-    }
-    .btn {
-      border: none;
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      color: #0b0f19;
-      background: linear-gradient(135deg, #ff82b5, #ff5f9f);
-      box-shadow: 0 10px 30px rgba(255,95,159,0.35);
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    .btn.alt {
-      background: linear-gradient(135deg, #7b5bff, #23d2ff);
-      color: #f7fbff;
-      box-shadow: 0 10px 30px rgba(35,210,255,0.28);
-    }
-    .btn:hover { transform: translateY(-2px) scale(1.02); }
-    .final {
-      margin-top: 14px;
-      font-size: 15px;
-      color: #ffe2ff;
-      opacity: 0;
-      transition: opacity .5s ease;
-    }
+    .reveal h1{ margin:0 0 12px; font-size: clamp(30px, 5vw, 44px); color:#ffe7f2; }
+    .reveal p{ margin:6px 0; color:#f9dce8; font-size: clamp(16px, 2.5vw, 20px); }
+    .buttons{ margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .btn{ border:none; padding:12px 18px; border-radius:12px; font-size:16px; cursor:pointer; color:#0b0f19; background:linear-gradient(135deg, #ff82b5, #ff5f9f); box-shadow: 0 10px 30px rgba(255,95,159,0.35); transition: transform .2s ease, box-shadow .2s ease; }
+    .btn.alt{ background:linear-gradient(135deg, #7b5bff, #23d2ff); color:#f7fbff; box-shadow: 0 10px 30px rgba(35,210,255,0.28); }
+    .btn:hover{ transform: translateY(-2px) scale(1.02); }
+    .final{ margin-top:14px; font-size:15px; color:#ffe2ff; opacity:0; transition: opacity .5s ease; }
 
-    /* Confetti */
-    canvas#confetti {
-      position: fixed; inset: 0; pointer-events: none; z-index: 5;
+    .dial {
+      width: 160px; height: 160px; margin: 0 auto;
+      position: relative; border-radius: 50%;
+      background: radial-gradient(circle, rgba(35,210,255,0.12) 0%, rgba(123,91,255,0.07) 60%, transparent 65%);
+      border: 1px solid rgba(123,91,255,0.35);
+      box-shadow: inset 0 0 20px rgba(123,91,255,0.18), 0 0 18px rgba(35,210,255,0.25);
     }
+    .dial .arc { position:absolute; inset:12px; border-radius:50%; border: 2px dashed rgba(123,91,255,0.45); animation: spin 18s linear infinite; }
+    .dial .arc:nth-child(2){ inset:26px; border-style: solid; border-color: rgba(35,210,255,0.65); animation-duration: 12s; }
+    .dial .center { position:absolute; inset:44px; border-radius:50%; background: radial-gradient(circle, #ff5f9f 0%, #7b5bff 80%); box-shadow: 0 0 25px rgba(255,95,159,0.45); }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Soft vignette */
-    .vignette {
-      position: fixed; inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(0,0,0,0.35));
-      mix-blend-mode: soft-light;
+    .audio-toggle { display:flex; align-items:center; gap:8px; margin-top:12px; font-family:'Inter',sans-serif; color:var(--muted); }
+    .switch { width:46px; height:26px; border-radius:13px; background:rgba(255,255,255,0.08); border:1px solid rgba(123,91,255,0.35); position:relative; cursor:pointer; }
+    .switch::after{ content:""; position:absolute; width:18px; height:18px; border-radius:50%; left:4px; top:3px; background: linear-gradient(135deg, #23d2ff, #7b5bff); transition: transform .25s ease; box-shadow: 0 4px 12px rgba(35,210,255,0.4); }
+    .switch.on { background:rgba(35,210,255,0.2); }
+    .switch.on::after { transform: translateX(20px); }
+
+    /* Interaction lab */
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .chip { padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(123,91,255,0.3); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: all .2s; }
+    .chip.active { background: linear-gradient(135deg, #23d2ff55, #7b5bff55); border-color: rgba(123,91,255,0.7); box-shadow: var(--glow); }
+    .lab-row { margin-bottom:12px; font-family:'Inter',sans-serif; color: var(--muted); }
+    .lab-row label { font-size:13px; letter-spacing:.05em; text-transform: uppercase; display:block; margin-bottom:6px; color: var(--accent2); }
+    .lab-row input[type="range"] { width:100%; accent-color: var(--accent2); }
+    .lab-row .readout { margin-top:6px; color: var(--text); font-weight:600; }
+    .lab-row input[type="text"], .lab-row select {
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(123,91,255,0.25);
+      background: rgba(255,255,255,0.03); color: var(--text); font-family:'Inter',sans-serif;
     }
+    .mini-btn { margin-top:8px; padding:10px 12px; border-radius:10px; border:1px solid rgba(123,91,255,0.35); background: linear-gradient(135deg, rgba(35,210,255,0.18), rgba(123,91,255,0.18)); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: transform .2s, box-shadow .2s;}
+    .mini-btn:hover { transform: translateY(-1px); box-shadow: var(--glow); }
+    .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(123,91,255,0.35); color: var(--text); font-size:13px; }
+
+    canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+    .vignette { position: fixed; inset:0; pointer-events:none; background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.35)); mix-blend-mode: soft-light; z-index:2; }
   </style>
 </head>
 <body>
+  <div class="stars"></div><div class="stars2"></div><div class="stars3"></div>
   <canvas id="confetti"></canvas>
   <div class="vignette"></div>
-  <div class="frame">
-    <div class="terminal" id="terminal">
+
+  <div class="frame" id="frame">
+    <div class="grid" id="terminal">
       <div class="panel">
-        <h2>AI SYSTEM // STATUS</h2>
+        <h2>AI SYSTEM // STATUS LOG</h2>
         <div class="console" id="console"></div>
       </div>
+
       <div class="panel">
-        <h2>VISUAL ANALYSIS</h2>
+        <h2>VISUAL ANALYSIS FEED</h2>
         <div class="photos">
           <div class="photo">
             <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80" alt="placeholder">
@@ -252,6 +185,77 @@
             <div class="tag">Impact: Life-changing</div>
           </div>
         </div>
+        <div class="meter" aria-label="Sentiment meter">
+          <span style="font-size:12px;color:var(--muted);">Emotion surge</span>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:18px;" id="extras">
+      <div class="panel">
+        <h2>HEARTLINE TELEMETRY</h2>
+        <div class="wave-wrap">
+          <canvas id="wave" class="wave"></canvas>
+        </div>
+        <div class="audio-toggle" role="switch" aria-checked="false" tabindex="0" id="audioToggle">
+          <div class="switch" id="switch"></div>
+          <span>Play ambient pulse</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>MEMORY TIMELINE</h2>
+        <div class="timeline" id="timeline">
+          <div class="event"><div class="dot"></div><div><strong>First scan</strong><br><small>Signal spike detected</small></div></div>
+          <div class="event"><div class="dot"></div><div><strong>Smile loop</strong><br><small>Looping grin packets</small></div></div>
+          <div class="event"><div class="dot"></div><div><strong>Heartbeat sync</strong><br><small>Waveforms matched</small></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interaction Lab -->
+    <div class="panel" style="margin-top:18px;" id="lab">
+      <h2>INTERACTION LAB</h2>
+      <div class="lab-row">
+        <label>Response Tone</label>
+        <div class="chips" id="tones">
+          <div class="chip active" data-tone="Soft & Genuine">Soft &amp; Genuine</div>
+          <div class="chip" data-tone="Playful & Flirty">Playful &amp; Flirty</div>
+          <div class="chip" data-tone="Epic & Cinematic">Epic &amp; Cinematic</div>
+          <div class="chip" data-tone="Calm & Grounded">Calm &amp; Grounded</div>
+        </div>
+        <div class="pill" id="toneOutput">Selected: Soft &amp; Genuine</div>
+      </div>
+
+      <div class="lab-row">
+        <label>Promise Intensity</label>
+        <input type="range" id="intensity" min="0" max="100" value="65">
+        <div class="readout" id="intensityText">Calibrating forever-mode at 65%</div>
+      </div>
+
+      <div class="lab-row">
+        <label>Unlock Code</label>
+        <input type="text" id="unlockInput" placeholder="Type a secret word">
+        <button class="mini-btn" id="unlockBtn">Submit &amp; Log</button>
+        <div class="pill" id="unlockStatus">Awaiting secure phrase...</div>
+      </div>
+
+      <div class="lab-row">
+        <label>First Adventure Selector</label>
+        <select id="adventure">
+          <option value="starlit walk">Starlit walk with hot cocoa</option>
+          <option value="sunrise pancakes">Sunrise pancakes and music</option>
+          <option value="arcade rivals">Arcade rivals to teammates</option>
+          <option value="bookstore quest">Bookstore treasure hunt</option>
+        </select>
+        <div class="readout" id="adventureText">Queued: starlit walk</div>
+      </div>
+
+      <div class="lab-row">
+        <label>Handshake Confirmation</label>
+        <button class="btn alt" style="width:100%;" id="handshakeBtn">Initiate Digital Handshake 🤝</button>
+        <div class="pill" id="handshakeStatus">Status: pending handshake</div>
       </div>
     </div>
 
@@ -259,6 +263,15 @@
       <div class="glitch" data-text="Error...">Error...</div>
       <div class="glitch" data-text="System cannot remain objective...">System cannot remain objective...</div>
       <div class="glitch" data-text="Emotions detected...">Emotions detected...</div>
+    </div>
+
+    <div class="panel" id="dialPanel" style="margin-top:18px; display:none; text-align:center;">
+      <h2>CORE SENTIMENT DIAL</h2>
+      <div class="dial">
+        <div class="arc"></div>
+        <div class="arc"></div>
+        <div class="center"></div>
+      </div>
     </div>
 
     <div class="reveal" id="reveal" style="display:none; margin-top:18px;">
@@ -274,7 +287,6 @@
   </div>
 
   <script>
-    /* Typewriter for console */
     const lines = [
       "Initializing system...",
       "Loading neural networks...",
@@ -282,64 +294,112 @@
       "Scanning subject...",
       "Analyzing smile patterns...",
       "Assessing heart-rate variability...",
+      "Forecasting life trajectory...",
       "Processing feelings...",
       "Conclusion pending..."
     ];
     const consoleEl = document.getElementById('console');
-    let line = 0, idx = 0;
-    function typeLine() {
-      if (line >= lines.length) {
-        setTimeout(triggerGlitch, 800);
-        return;
-      }
+    let line=0, idx=0;
+    function typeLine(){
+      if(line >= lines.length){ setTimeout(triggerGlitch, 900); return; }
       const current = lines[line];
-      consoleEl.innerHTML = lines.slice(0, line).join("<br>") + "<br>" + current.slice(0, idx) + '<span class="cursor"></span>';
+      consoleEl.innerHTML = lines.slice(0,line).join("<br>") + "<br>" + current.slice(0,idx) + '<span class="cursor"></span>';
       idx++;
-      if (idx <= current.length) {
-        setTimeout(typeLine, 32 + Math.random()*45);
+      if(idx <= current.length){
+        setTimeout(typeLine, 30 + Math.random()*45);
       } else {
-        line++; idx = 0;
-        setTimeout(typeLine, 300);
+        line++; idx=0; setTimeout(typeLine, 300);
       }
     }
-    setTimeout(typeLine, 400);
+    setTimeout(typeLine, 450);
 
-    /* Glitch transition */
-    function triggerGlitch() {
+    const waveCanvas = document.getElementById('wave');
+    const wctx = waveCanvas.getContext('2d');
+    function resizeWave(){ waveCanvas.width = waveCanvas.parentElement.clientWidth; waveCanvas.height = 140; }
+    window.addEventListener('resize', resizeWave); resizeWave();
+    let t=0;
+    function drawWave(){
+      wctx.clearRect(0,0,waveCanvas.width,waveCanvas.height);
+      wctx.beginPath();
+      for(let x=0; x<waveCanvas.width; x++){
+        const y = waveCanvas.height/2 + Math.sin((x*0.03)+t)*20 + Math.sin((x*0.01)+t*1.5)*12;
+        if(x===0) wctx.moveTo(x,y); else wctx.lineTo(x,y);
+      }
+      wctx.strokeStyle = 'rgba(35,210,255,0.8)';
+      wctx.lineWidth = 2;
+      wctx.shadowBlur = 12;
+      wctx.shadowColor = '#23d2ff';
+      wctx.stroke();
+      t += 0.08;
+      requestAnimationFrame(drawWave);
+    }
+    drawWave();
+
+    let audioCtx, osc, gain, playing=false;
+    const switchEl = document.getElementById('switch');
+    const toggle = document.getElementById('audioToggle');
+    function startTone(){
+      if(playing) return;
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      osc = audioCtx.createOscillator();
+      gain = audioCtx.createGain();
+      osc.type = 'sine'; osc.frequency.value = 120;
+      gain.gain.value = 0.0001;
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.03, audioCtx.currentTime + 0.2);
+      playing = true;
+    }
+    function stopTone(){
+      if(!playing) return;
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.2);
+      setTimeout(()=>{ osc.stop(); playing=false; }, 250);
+    }
+    toggle.addEventListener('click', ()=>{
+      toggle.setAttribute('aria-checked', !playing);
+      switchEl.classList.toggle('on');
+      playing ? stopTone() : startTone();
+    });
+
+    const timeline = document.getElementById('timeline');
+    setTimeout(()=> timeline.insertAdjacentHTML('beforeend',
+      '<div class="event"><div class="dot"></div><div><strong>Objectivity breach</strong><br><small>Emotion packets overflow</small></div></div>'
+    ), 3200);
+
+    function triggerGlitch(){
       document.getElementById('glitchPanel').style.display = 'block';
+      document.getElementById('dialPanel').style.display = 'block';
       const term = document.getElementById('terminal');
       term.style.filter = 'blur(4px)';
       term.style.transform = 'scale(0.98)';
-      setTimeout(() => {
+      setTimeout(()=>{
         term.style.display = 'none';
         document.getElementById('glitchPanel').style.display = 'none';
+        document.getElementById('dialPanel').style.display = 'none';
         showReveal();
-      }, 2500);
+      }, 2600);
     }
 
-    /* Reveal screen */
-    function showReveal() {
+    function showReveal(){
       const reveal = document.getElementById('reveal');
       reveal.style.display = 'block';
       reveal.animate([{opacity:0, filter:'blur(8px)'},{opacity:1, filter:'blur(0)'}], {duration:800, easing:'ease-out'});
     }
 
-    /* Confetti hearts */
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-    function resize() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    let particles=[];
+    function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
     window.addEventListener('resize', resize); resize();
 
-    function celebrate() {
+    function celebrate(){
       document.getElementById('finalMsg').style.opacity = 1;
       spawnConfetti();
     }
-
-    function spawnConfetti() {
-      particles = [];
-      const colors = ['#ff5f9f', '#ff82b5', '#7b5bff', '#23d2ff', '#ffe2ff'];
-      for (let i = 0; i < 150; i++) {
+    function spawnConfetti(){
+      particles=[];
+      const colors=['#ff5f9f','#ff82b5','#7b5bff','#23d2ff','#ffe2ff'];
+      for(let i=0;i<180;i++){
         particles.push({
           x: Math.random()*canvas.width,
           y: -20 - Math.random()*200,
@@ -353,33 +413,84 @@
       }
       requestAnimationFrame(loop);
     }
-
-    function heartPath(ctx, r) {
-      ctx.moveTo(0, -r/2);
-      ctx.bezierCurveTo(r, -r*1.6, r*2.2, -r*0.1, 0, r*1.4);
-      ctx.bezierCurveTo(-2.2*r, -r*0.1, -r, -r*1.6, 0, -r/2);
+    function heartPath(ctx,r){
+      ctx.moveTo(0,-r/2);
+      ctx.bezierCurveTo(r,-r*1.6,r*2.2,-r*0.1,0,r*1.4);
+      ctx.bezierCurveTo(-2.2*r,-r*0.1,-r,-r*1.6,0,-r/2);
     }
-
-    function loop() {
+    function loop(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      particles.forEach(p => {
+      particles.forEach(p=>{
         ctx.save();
-        ctx.translate(p.x, p.y);
+        ctx.translate(p.x,p.y);
         ctx.rotate(p.rot);
         ctx.scale(0.9,1);
         ctx.beginPath();
-        heartPath(ctx, p.r);
+        heartPath(ctx,p.r);
         ctx.fillStyle = p.color;
         ctx.fill();
         ctx.restore();
-
-        p.y += p.vy;
-        p.x += p.vx;
-        p.rot += p.vr;
+        p.y+=p.vy; p.x+=p.vx; p.rot+=p.vr;
       });
-      particles = particles.filter(p => p.y < canvas.height + 40);
-      if (particles.length) requestAnimationFrame(loop);
+      particles = particles.filter(p=>p.y < canvas.height+40);
+      if(particles.length) requestAnimationFrame(loop);
     }
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' && document.getElementById('reveal').style.display === 'block'){
+        celebrate();
+      }
+      if(e.key.toLowerCase() === 'l'){ celebrate(); }
+    });
+
+    /* Interaction Lab Logic */
+    const toneChips = Array.from(document.querySelectorAll('#tones .chip'));
+    const toneOutput = document.getElementById('toneOutput');
+    toneChips.forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        toneChips.forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+        toneOutput.textContent = "Selected: " + chip.dataset.tone;
+      });
+    });
+
+    const intensity = document.getElementById('intensity');
+    const intensityText = document.getElementById('intensityText');
+    intensity.addEventListener('input', ()=>{
+      const val = intensity.value;
+      const mood = val > 80 ? "locking in forever-mode" : val > 50 ? "calibrating steady glow" : "warming up courage";
+      intensityText.textContent = `${mood} at ${val}%`;
+    });
+
+    const unlockInput = document.getElementById('unlockInput');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const unlockStatus = document.getElementById('unlockStatus');
+    unlockBtn.addEventListener('click', ()=>{
+      const phrase = unlockInput.value.trim();
+      if(!phrase){
+        unlockStatus.textContent = "Need a phrase to unlock feelings.";
+        return;
+      }
+      unlockStatus.textContent = `Access granted: "${phrase}" stored in heart-core.`;
+      timeline.insertAdjacentHTML('beforeend',
+        `<div class="event"><div class="dot"></div><div><strong>Secret key accepted</strong><br><small>${phrase}</small></div></div>`
+      );
+      unlockInput.value = "";
+    });
+
+    const adventure = document.getElementById('adventure');
+    const adventureText = document.getElementById('adventureText');
+    adventure.addEventListener('change', ()=>{
+      adventureText.textContent = "Queued: " + adventure.value;
+    });
+
+    const handshakeBtn = document.getElementById('handshakeBtn');
+    const handshakeStatus = document.getElementById('handshakeStatus');
+    handshakeBtn.addEventListener('click', ()=>{
+      handshakeStatus.textContent = "Handshake locked: hearts synced.";
+      handshakeBtn.textContent = "Handshake Complete ✅";
+      celebrate();
+    });
   </script>
 </body>
 </html>

@@ -68,26 +68,34 @@
     .cursor { display:inline-block; width:9px; height:16px; background:var(--accent2); margin-left:4px; animation: blink .9s steps(1) infinite; }
     @keyframes blink { 50%{opacity:0;} }
 
-    /* Visual Analysis */
-    .photos { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
-    .photo {
-      position:relative; border-radius:12px; overflow:hidden;
-      border:1px solid rgba(123,91,255,0.35); background:#0f152d;
-      min-height:200px; box-shadow: 0 0 18px rgba(35,210,255,0.2);
+    /* Hacking feed */
+    .hack-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
+    .hack-panel {
+      position:relative; min-height:200px;
+      border-radius:12px; border:1px solid rgba(123,91,255,0.35);
+      background: radial-gradient(circle at 20% 20%, rgba(35,210,255,0.08), rgba(12,16,36,0.95));
+      overflow:hidden; box-shadow: 0 0 18px rgba(35,210,255,0.2);
+      padding:12px;
+      display:flex; align-items:flex-start; justify-content:flex-start;
     }
-    .photo img { width:100%; height:100%; object-fit:cover; display:block; }
-    .tag {
-      position:absolute; left:10px; bottom:10px; right:10px;
-      padding:8px 10px; border-radius:10px;
-      background:rgba(5,8,16,0.82); border:1px solid rgba(123,91,255,0.45);
-      color:#23d2ff; font-size:13px; box-shadow: 0 0 10px rgba(35,210,255,0.25);
+    .hack-lines {
+      width:100%; font-size:13px; line-height:1.45; color:#9df3ff;
+      white-space:pre; font-family:'Space Mono', monospace;
     }
+    .hack-heading { color:#7bffb7; margin-bottom:6px; display:block; font-weight:bold; }
+    .scan-bar {
+      position:absolute; left:0; right:0; height:40%;
+      background: linear-gradient(180deg, rgba(123,91,255,0.08), rgba(35,210,255,0.18), rgba(123,91,255,0.08));
+      animation: scan 2.6s linear infinite;
+      pointer-events:none; mix-blend-mode:screen;
+    }
+    @keyframes scan { 0%{top:-40%;} 100%{top:100%;} }
     .meter { margin-top:10px; display:flex; align-items:center; gap:12px; font-family:'Inter',sans-serif; color:var(--muted); }
     .bar { flex:1; height:10px; border-radius:6px; background: linear-gradient(90deg, #23d2ff, #7b5bff, #ff5f9f); position:relative; overflow:hidden; }
     .bar::after { content:""; position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,0.5), transparent 50%, rgba(255,255,255,0.5)); animation: shimmer 2s linear infinite; }
     @keyframes shimmer { from{transform:translateX(-100%);} to{transform:translateX(100%);} }
 
-    /* Radar */
+    /* Radar, Interaction, etc. (unchanged) */
     .radar-wrap { position: relative; width: 100%; aspect-ratio: 1; background: radial-gradient(circle, rgba(35,210,255,0.05) 0%, rgba(4,6,10,0.9) 70%); border:1px solid rgba(123,91,255,0.3); border-radius: 16px; overflow:hidden; box-shadow: var(--glow);}
     #radar { width:100%; height:100%; display:block; }
     .radar-stats { display:grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:10px; font-family:'Inter',sans-serif; }
@@ -95,7 +103,6 @@
     .stat strong { color: var(--text); font-size:14px; }
     .stat small { color: var(--muted); display:block; }
 
-    /* Interaction */
     .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
     .chip { padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(123,91,255,0.3); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: all .2s; }
     .chip.active { background: linear-gradient(135deg, #23d2ff55, #7b5bff55); border-color: rgba(123,91,255,0.7); box-shadow: var(--glow); }
@@ -111,7 +118,6 @@
     .mini-btn:hover { transform: translateY(-1px); box-shadow: var(--glow); }
     .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(123,91,255,0.35); color: var(--text); font-size:13px; }
 
-    /* Glitch */
     .glitch { position:relative; color:var(--text); font-size: clamp(26px, 3vw, 32px); letter-spacing:.04em; filter: drop-shadow(0 0 6px rgba(35,210,255,0.35)); animation: glitch 1.4s infinite steps(2);}
     .glitch::before, .glitch::after{ content: attr(data-text); position:absolute; left:0; top:0; opacity:.75; mix-blend-mode: lighten;}
     .glitch::before{ color:#23d2ff; transform: translate(2px,-2px); }
@@ -140,8 +146,11 @@
     .btn.ghost{ background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.08)); color: #e1e8ff; border:1px solid rgba(123,91,255,0.35); }
     .btn:hover{ transform: translateY(-2px) scale(1.02); }
     .final{ margin-top:14px; font-size:15px; color:#ffe2ff; opacity:0; transition: opacity .5s ease; }
+    .romantic-caption{
+      margin-top:10px; font-size:16px; color:#ffe7f2; opacity:0; transition: opacity .5s ease, transform .5s ease;
+      transform: translateY(8px);
+    }
 
-    /* Popup */
     .popup {
       position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
       background: rgba(0,0,0,0.55); z-index: 10; opacity: 0; pointer-events: none;
@@ -200,22 +209,11 @@
       </div>
       <div class="panel">
         <h2>VISUAL ANALYSIS FEED</h2>
-        <div class="photos">
-          <div class="photo">
-            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80" alt="placeholder">
-            <div class="tag">Smile detection: 100%</div>
-          </div>
-          <div class="photo">
-            <img src="https://via.placeholder.com/400x520?text=placeholder" alt="placeholder">
-            <div class="tag">Cuteness level: Critical</div>
-          </div>
-          <div class="photo">
-            <img src="https://via.placeholder.com/800x520?text=placeholder" alt="placeholder">
-            <div class="tag">Impact: Life-changing</div>
-          </div>
-          <div class="photo" style="display:flex; align-items:flex-end; justify-content:center;">
-            <div class="tag" style="width:90%;">Emotion surge meter</div>
-          </div>
+        <div class="hack-grid">
+          <div class="hack-panel"><div class="scan-bar"></div><div class="hack-lines" id="hack1"></div></div>
+          <div class="hack-panel"><div class="scan-bar"></div><div class="hack-lines" id="hack2"></div></div>
+          <div class="hack-panel"><div class="scan-bar"></div><div class="hack-lines" id="hack3"></div></div>
+          <div class="hack-panel"><div class="scan-bar"></div><div class="hack-lines" id="hack4"></div></div>
         </div>
         <div class="meter" aria-label="Sentiment meter">
           <span style="font-size:12px;color:var(--muted);">Emotion surge</span>
@@ -234,7 +232,7 @@
     </div>
   </div>
 
-  <!-- STAGE 3: everything else appears after intro completes -->
+  <!-- STAGE 3 -->
   <div class="frame" id="stage3" style="display:none;">
     <div class="grid" id="topRow">
       <div class="panel">
@@ -331,6 +329,7 @@
         <button class="btn ghost" id="noBtn" aria-label="No button that dodges clicks">No 😅</button>
       </div>
       <div class="final" id="finalMsg">System update: Happiest person alive.</div>
+      <div class="romantic-caption" id="romanticCaption">Romantic caption placeholder</div>
     </div>
   </div>
 
@@ -379,13 +378,12 @@
     setTimeout(typeLine, 450);
 
     function triggerGlitch(){
-      // hide stage1, show glitch briefly, then stage3
       stage1.style.display = 'none';
       glitchPanel.style.display = 'block';
       setTimeout(()=>{
         glitchPanel.style.display = 'none';
         stage3.style.display = 'block';
-        showReveal(); // bring in reveal after stage3 shows
+        showReveal();
       }, 2200);
     }
 
@@ -394,6 +392,29 @@
       reveal.style.display = 'block';
       reveal.animate([{opacity:0, filter:'blur(8px)'},{opacity:1, filter:'blur(0)'}], {duration:800, easing:'ease-out'});
     }
+
+    /* Hacking panels text */
+    const hackPanels = ['hack1','hack2','hack3','hack4'].map(id=>document.getElementById(id));
+    const glyphs = "01#@$%&*+{}[]<>/\\=~";
+    function randomLine(len=36){
+      return Array.from({length:len},()=>glyphs[Math.floor(Math.random()*glyphs.length)]).join('');
+    }
+    function updateHackPanels(){
+      hackPanels.forEach((el,i)=>{
+        const header = ["TARGET: YOU","HEART SCAN","SMILE VECTORS","TRUST LINK"][i%4];
+        const lines = [
+          "> STATUS: ONLINE",
+          "> SIGNAL: " + (95+Math.random()*5).toFixed(2) + "% locked",
+          "> FEELS: " + (70+Math.random()*30).toFixed(1) + "% rising",
+          "> HASH: " + randomLine(16),
+          "> KEY: " + randomLine(12),
+          "> NOTES: irresistible"
+        ].join("\n");
+        el.textContent = header + "\n" + lines + "\n" + randomLine(34) + "\n" + randomLine(34);
+      });
+    }
+    setInterval(updateHackPanels, 700);
+    updateHackPanels();
 
     /* Affinity radar */
     const radar = document.getElementById('radar');
@@ -535,6 +556,10 @@
     window.addEventListener('resize', resize); resize();
     function celebrate(){
       document.getElementById('finalMsg').style.opacity = 1;
+      const cap = document.getElementById('romanticCaption');
+      cap.textContent = "Romantic caption: You’re my favorite forever.";
+      cap.style.opacity = 1;
+      cap.style.transform = 'translateY(0)';
       spawnConfetti();
     }
     function spawnConfetti(){

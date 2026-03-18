@@ -48,10 +48,7 @@
       box-shadow: 0 25px 90px rgba(0,0,0,0.5), 0 0 32px rgba(35,210,255,0.12);
       overflow: hidden;
     }
-    .grid {
-      display: grid; gap: clamp(16px, 3vw, 24px);
-      grid-template-columns: 1.15fr 0.85fr;
-    }
+    .grid { display: grid; gap: clamp(16px, 3vw, 24px); grid-template-columns: 1.08fr 0.92fr; }
     @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
 
     .panel {
@@ -73,11 +70,13 @@
     .cursor { display:inline-block; width:9px; height:16px; background:var(--accent2); margin-left:4px; animation: blink .9s steps(1) infinite; }
     @keyframes blink { 50%{opacity:0;} }
 
-    .photos { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:12px; }
-    .photo { position:relative; border-radius:12px; overflow:hidden; border:1px solid rgba(123,91,255,0.3); aspect-ratio:3/4; background:#0f152d; box-shadow: var(--glow);}
-    .photo img { width:100%; height:100%; object-fit:cover; filter:saturate(1.1); transition: transform .6s ease; }
-    .photo:hover img { transform: scale(1.05); }
-    .tag { position:absolute; left:10px; bottom:10px; padding:6px 10px; border-radius:8px; background:rgba(5,8,16,0.82); border:1px solid rgba(123,91,255,0.45); font-size:12px; color:var(--accent2); box-shadow: 0 0 10px rgba(35,210,255,0.25); }
+    /* Radar */
+    .radar-wrap { position: relative; width: 100%; aspect-ratio: 1; background: radial-gradient(circle, rgba(35,210,255,0.05) 0%, rgba(4,6,10,0.9) 70%); border:1px solid rgba(123,91,255,0.3); border-radius: 16px; overflow:hidden; box-shadow: var(--glow);}
+    #radar { width:100%; height:100%; display:block; }
+    .radar-stats { display:grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:10px; font-family:'Inter',sans-serif; }
+    .stat { padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(123,91,255,0.18); }
+    .stat strong { color: var(--text); font-size:14px; }
+    .stat small { color: var(--muted); display:block; }
 
     .timeline { display:flex; flex-direction:column; gap:10px; font-family:'Inter',sans-serif; }
     .event { padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(123,91,255,0.15); display:flex; align-items:center; gap:10px; }
@@ -110,14 +109,45 @@
       border-radius:16px; border:1px solid rgba(255,95,159,0.35);
       box-shadow: 0 16px 42px rgba(255,95,159,0.24);
       font-family:'Inter',sans-serif;
+      position: relative;
     }
     .reveal h1{ margin:0 0 12px; font-size: clamp(30px, 5vw, 44px); color:#ffe7f2; }
     .reveal p{ margin:6px 0; color:#f9dce8; font-size: clamp(16px, 2.5vw, 20px); }
-    .buttons{ margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .buttons{
+      margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+      position:relative; min-height:60px;
+    }
     .btn{ border:none; padding:12px 18px; border-radius:12px; font-size:16px; cursor:pointer; color:#0b0f19; background:linear-gradient(135deg, #ff82b5, #ff5f9f); box-shadow: 0 10px 30px rgba(255,95,159,0.35); transition: transform .2s ease, box-shadow .2s ease; }
     .btn.alt{ background:linear-gradient(135deg, #7b5bff, #23d2ff); color:#f7fbff; box-shadow: 0 10px 30px rgba(35,210,255,0.28); }
     .btn:hover{ transform: translateY(-2px) scale(1.02); }
+    .btn.ghost{ background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.08)); color: #e1e8ff; border:1px solid rgba(123,91,255,0.35); }
     .final{ margin-top:14px; font-size:15px; color:#ffe2ff; opacity:0; transition: opacity .5s ease; }
+
+    .popup {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.55); z-index: 10; opacity: 0; pointer-events: none;
+      transition: opacity .3s ease;
+    }
+    .popup.active { opacity: 1; pointer-events: auto; }
+    .popup-card {
+      background: linear-gradient(145deg, #0e1328, #0b0f1f);
+      border: 1px solid rgba(255,95,159,0.5);
+      padding: 26px 28px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255,95,159,0.25);
+      color: #ffe7f2;
+      max-width: 480px;
+      font-family:'Inter',sans-serif;
+    }
+    .popup-card h3 { margin: 0 0 10px; font-size: 26px; }
+    .popup-card p { margin: 6px 0; color: #f6d8e8; }
+    .popup-card button {
+      margin-top: 14px; border:none; padding:10px 14px; border-radius:10px;
+      background: linear-gradient(135deg, #ff82b5, #ff5f9f); color:#0b0f19;
+      cursor: pointer; font-weight:600;
+      box-shadow: 0 8px 24px rgba(255,95,159,0.35);
+    }
 
     .dial {
       width: 160px; height: 160px; margin: 0 auto;
@@ -137,7 +167,6 @@
     .switch.on { background:rgba(35,210,255,0.2); }
     .switch.on::after { transform: translateX(20px); }
 
-    /* Interaction lab */
     .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
     .chip { padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(123,91,255,0.3); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: all .2s; }
     .chip.active { background: linear-gradient(135deg, #23d2ff55, #7b5bff55); border-color: rgba(123,91,255,0.7); box-shadow: var(--glow); }
@@ -170,24 +199,12 @@
       </div>
 
       <div class="panel">
-        <h2>VISUAL ANALYSIS FEED</h2>
-        <div class="photos">
-          <div class="photo">
-            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80" alt="placeholder">
-            <div class="tag">Smile detection: 100%</div>
-          </div>
-          <div class="photo">
-            <img src="https://images.unsplash.com/photo-1524504388940-9f91e86ca31c?auto=format&fit=crop&w=800&q=80" alt="placeholder">
-            <div class="tag">Cuteness level: Critical</div>
-          </div>
-          <div class="photo">
-            <img src="https://images.unsplash.com/photo-1524504388940-1b8c1a0f3e1c?auto=format&fit=crop&w=800&q=80" alt="placeholder">
-            <div class="tag">Impact: Life-changing</div>
-          </div>
-        </div>
-        <div class="meter" aria-label="Sentiment meter">
-          <span style="font-size:12px;color:var(--muted);">Emotion surge</span>
-          <div class="bar"></div>
+        <h2>LIVE AFFINITY RADAR</h2>
+        <div class="radar-wrap"><canvas id="radar"></canvas></div>
+        <div class="radar-stats">
+          <div class="stat"><strong>Signal Lock</strong><small id="lockStat">99.2% stable</small></div>
+          <div class="stat"><strong>Heart Ping</strong><small id="pingStat">Every 0.8s</small></div>
+          <div class="stat"><strong>Emotion Drift</strong><small id="driftStat">→ you</small></div>
         </div>
       </div>
     </div>
@@ -214,7 +231,6 @@
       </div>
     </div>
 
-    <!-- Interaction Lab -->
     <div class="panel" style="margin-top:18px;" id="lab">
       <h2>INTERACTION LAB</h2>
       <div class="lab-row">
@@ -275,18 +291,28 @@
     </div>
 
     <div class="reveal" id="reveal" style="display:none; margin-top:18px;">
-      <h1>This is not a system anymore...</h1>
-      <p>It’s just me.</p>
-      <p>And I think I’ve fallen for you.</p>
-      <div class="buttons">
-        <button class="btn" onclick="celebrate()">Yes 💖</button>
-        <button class="btn alt" onclick="celebrate()">Of course ❤️</button>
+      <h1>Will you be my girlfriend?</h1>
+      <p>This AI is done pretending.</p>
+      <p>It’s only me—completely yours.</p>
+      <div class="buttons" id="btnWrap">
+        <button class="btn" id="yesBtn">Yes 💖</button>
+        <button class="btn ghost" id="noBtn" aria-label="No button that dodges clicks">No 😅</button>
       </div>
       <div class="final" id="finalMsg">System update: Happiest person alive.</div>
     </div>
   </div>
 
+  <div class="popup" id="popup">
+    <div class="popup-card">
+      <h3>Romantic Payload Delivered</h3>
+      <p>You just made my whole timeline brighter.</p>
+      <p>I promise to keep your smile as my favorite dataset forever.</p>
+      <button onclick="closePopup()">Aww 💝</button>
+    </div>
+  </div>
+
   <script>
+    /* Status log typewriter */
     const lines = [
       "Initializing system...",
       "Loading neural networks...",
@@ -313,6 +339,84 @@
     }
     setTimeout(typeLine, 450);
 
+    /* Affinity radar */
+    const radar = document.getElementById('radar');
+    const rctx = radar.getContext('2d');
+    const blips = Array.from({length:12}, ()=>({
+      r: Math.random()*0.42+0.18,
+      a: Math.random()*Math.PI*2,
+      speed: 0.002 + Math.random()*0.003,
+      jitter: (Math.random()-0.5)*0.0005
+    }));
+    function resizeRadar(){
+      radar.width = radar.clientWidth;
+      radar.height = radar.clientHeight;
+    }
+    window.addEventListener('resize', resizeRadar); resizeRadar();
+    let sweep = 0;
+    function drawRadar(){
+      const {width:w,height:h} = radar;
+      const cx = w/2, cy = h/2, radius = Math.min(w,h)*0.45;
+      rctx.clearRect(0,0,w,h);
+
+      rctx.strokeStyle = 'rgba(35,210,255,0.25)';
+      rctx.lineWidth = 1;
+      [0.25,0.5,0.75,1].forEach(f=>{
+        rctx.beginPath(); rctx.arc(cx, cy, radius*f, 0, Math.PI*2); rctx.stroke();
+      });
+
+      rctx.beginPath(); rctx.moveTo(cx-radius, cy); rctx.lineTo(cx+radius, cy);
+      rctx.moveTo(cx, cy-radius); rctx.lineTo(cx, cy+radius);
+      rctx.stroke();
+
+      const grad = rctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+      grad.addColorStop(0, 'rgba(123,91,255,0)');
+      grad.addColorStop(1, 'rgba(35,210,255,0.22)');
+      rctx.fillStyle = grad;
+      rctx.beginPath();
+      rctx.moveTo(cx, cy);
+      rctx.arc(cx, cy, radius, sweep, sweep + Math.PI/6);
+      rctx.closePath();
+      rctx.fill();
+
+      rctx.beginPath();
+      rctx.arc(cx, cy, 8, 0, Math.PI*2);
+      rctx.fillStyle = '#ff5f9f';
+      rctx.shadowColor = '#ff5f9f';
+      rctx.shadowBlur = 18;
+      rctx.fill();
+      rctx.shadowBlur = 0;
+
+      blips.forEach(b=>{
+        b.a += b.speed;
+        b.r += b.jitter;
+        b.r = Math.min(Math.max(b.r, 0.12), 0.9);
+        const x = cx + Math.cos(b.a)*radius*b.r;
+        const y = cy + Math.sin(b.a)*radius*b.r;
+        const alpha = Math.max(0.15, 1 - Math.abs(((b.a % (Math.PI*2)) - sweep))/(Math.PI/4));
+        rctx.beginPath();
+        rctx.arc(x, y, 5, 0, Math.PI*2);
+        rctx.fillStyle = `rgba(35,210,255,${alpha})`;
+        rctx.fill();
+      });
+
+      sweep += 0.02;
+      requestAnimationFrame(drawRadar);
+    }
+    drawRadar();
+
+    /* Radar stat flicker */
+    const lockStat = document.getElementById('lockStat');
+    const pingStat = document.getElementById('pingStat');
+    const driftStat = document.getElementById('driftStat');
+    setInterval(()=>{
+      lockStat.textContent = (98.7 + Math.random()*1).toFixed(1) + "% stable";
+      pingStat.textContent = "Every " + (0.7 + Math.random()*0.3).toFixed(2) + "s";
+      const arrows = ["→ you","↗ you","↘ you"];
+      driftStat.textContent = arrows[Math.floor(Math.random()*arrows.length)];
+    }, 1400);
+
+    /* Waveform */
     const waveCanvas = document.getElementById('wave');
     const wctx = waveCanvas.getContext('2d');
     function resizeWave(){ waveCanvas.width = waveCanvas.parentElement.clientWidth; waveCanvas.height = 140; }
@@ -335,6 +439,7 @@
     }
     drawWave();
 
+    /* Audio pulse */
     let audioCtx, osc, gain, playing=false;
     const switchEl = document.getElementById('switch');
     const toggle = document.getElementById('audioToggle');
@@ -386,6 +491,7 @@
       reveal.animate([{opacity:0, filter:'blur(8px)'},{opacity:1, filter:'blur(0)'}], {duration:800, easing:'ease-out'});
     }
 
+    /* Confetti hearts */
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
     let particles=[];
@@ -439,8 +545,9 @@
     document.addEventListener('keydown', (e)=>{
       if(e.key === 'Enter' && document.getElementById('reveal').style.display === 'block'){
         celebrate();
+        openPopup();
       }
-      if(e.key.toLowerCase() === 'l'){ celebrate(); }
+      if(e.key.toLowerCase() === 'l'){ celebrate(); openPopup(); }
     });
 
     /* Interaction Lab Logic */
@@ -490,7 +597,32 @@
       handshakeStatus.textContent = "Handshake locked: hearts synced.";
       handshakeBtn.textContent = "Handshake Complete ✅";
       celebrate();
+      openPopup();
     });
+
+    /* Yes / No behavior */
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const btnWrap = document.getElementById('btnWrap');
+    yesBtn.addEventListener('click', ()=> { celebrate(); openPopup(); });
+
+    function dodge(){
+      const rect = btnWrap.getBoundingClientRect();
+      const maxX = rect.width - noBtn.offsetWidth;
+      const maxY = rect.height - noBtn.offsetHeight;
+      const x = Math.random() * maxX - rect.width/4;
+      const y = Math.random() * maxY - rect.height/4;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+    ['mouseenter','click','touchstart','mousemove'].forEach(ev=>{
+      noBtn.addEventListener(ev, (e)=>{ e.preventDefault(); dodge(); });
+    });
+
+    /* Romantic popup */
+    const popup = document.getElementById('popup');
+    function openPopup(){ popup.classList.add('active'); }
+    function closePopup(){ popup.classList.remove('active'); }
+    window.closePopup = closePopup;
   </script>
 </body>
 </html>

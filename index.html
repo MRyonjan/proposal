@@ -28,8 +28,7 @@
     }
     .stars, .stars2, .stars3 {
       position: fixed; width: 200%; height: 200%;
-      background-repeat: repeat;
-      background-size: 2px 2px;
+      background-repeat: repeat; background-size: 2px 2px;
       pointer-events: none; z-index: 0;
     }
     .stars { background-image: radial-gradient(1px 1px at 1px 1px, rgba(255,255,255,0.8), transparent); animation: drift 120s linear infinite; opacity:.35;}
@@ -56,8 +55,7 @@
       border: 1px solid rgba(123,91,255,0.28);
       border-radius: 16px;
       padding: clamp(14px, 3vw, 20px);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
       box-shadow: inset 0 0 22px rgba(123,91,255,0.07), 0 10px 32px rgba(0,0,0,0.35);
     }
     .panel::before {
@@ -70,6 +68,25 @@
     .cursor { display:inline-block; width:9px; height:16px; background:var(--accent2); margin-left:4px; animation: blink .9s steps(1) infinite; }
     @keyframes blink { 50%{opacity:0;} }
 
+    /* Visual Analysis */
+    .photos { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; }
+    .photo {
+      position:relative; border-radius:12px; overflow:hidden;
+      border:1px solid rgba(123,91,255,0.35); background:#0f152d;
+      min-height:200px; box-shadow: 0 0 18px rgba(35,210,255,0.2);
+    }
+    .photo img { width:100%; height:100%; object-fit:cover; display:block; }
+    .tag {
+      position:absolute; left:10px; bottom:10px; right:10px;
+      padding:8px 10px; border-radius:10px;
+      background:rgba(5,8,16,0.82); border:1px solid rgba(123,91,255,0.45);
+      color:#23d2ff; font-size:13px; box-shadow: 0 0 10px rgba(35,210,255,0.25);
+    }
+    .meter { margin-top:10px; display:flex; align-items:center; gap:12px; font-family:'Inter',sans-serif; color:var(--muted); }
+    .bar { flex:1; height:10px; border-radius:6px; background: linear-gradient(90deg, #23d2ff, #7b5bff, #ff5f9f); position:relative; overflow:hidden; }
+    .bar::after { content:""; position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,0.5), transparent 50%, rgba(255,255,255,0.5)); animation: shimmer 2s linear infinite; }
+    @keyframes shimmer { from{transform:translateX(-100%);} to{transform:translateX(100%);} }
+
     /* Radar */
     .radar-wrap { position: relative; width: 100%; aspect-ratio: 1; background: radial-gradient(circle, rgba(35,210,255,0.05) 0%, rgba(4,6,10,0.9) 70%); border:1px solid rgba(123,91,255,0.3); border-radius: 16px; overflow:hidden; box-shadow: var(--glow);}
     #radar { width:100%; height:100%; display:block; }
@@ -78,18 +95,23 @@
     .stat strong { color: var(--text); font-size:14px; }
     .stat small { color: var(--muted); display:block; }
 
-    .timeline { display:flex; flex-direction:column; gap:10px; font-family:'Inter',sans-serif; }
-    .event { padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(123,91,255,0.15); display:flex; align-items:center; gap:10px; }
-    .dot { width:10px; height:10px; border-radius:50%; background:var(--accent2); box-shadow: 0 0 12px rgba(35,210,255,0.6); }
-    .event small { color: var(--muted); letter-spacing:.04em; }
+    /* Interaction */
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .chip { padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(123,91,255,0.3); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: all .2s; }
+    .chip.active { background: linear-gradient(135deg, #23d2ff55, #7b5bff55); border-color: rgba(123,91,255,0.7); box-shadow: var(--glow); }
+    .lab-row { margin-bottom:12px; font-family:'Inter',sans-serif; color: var(--muted); }
+    .lab-row label { font-size:13px; letter-spacing:.05em; text-transform: uppercase; display:block; margin-bottom:6px; color: var(--accent2); }
+    .lab-row input[type="range"] { width:100%; accent-color: var(--accent2); }
+    .lab-row .readout { margin-top:6px; color: var(--text); font-weight:600; }
+    .lab-row input[type="text"], .lab-row select {
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(123,91,255,0.25);
+      background: rgba(255,255,255,0.03); color: var(--text); font-family:'Inter',sans-serif;
+    }
+    .mini-btn { margin-top:8px; padding:10px 12px; border-radius:10px; border:1px solid rgba(123,91,255,0.35); background: linear-gradient(135deg, rgba(35,210,255,0.18), rgba(123,91,255,0.18)); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: transform .2s, box-shadow .2s;}
+    .mini-btn:hover { transform: translateY(-1px); box-shadow: var(--glow); }
+    .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(123,91,255,0.35); color: var(--text); font-size:13px; }
 
-    .wave-wrap { position:relative; height:140px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px solid rgba(123,91,255,0.2); overflow:hidden;}
-    .wave { position:absolute; inset:0; }
-    .meter { display:flex; align-items:center; gap:12px; margin-top:12px; }
-    .bar { flex:1; height:10px; border-radius:6px; background: linear-gradient(90deg, #23d2ff, #7b5bff, #ff5f9f); box-shadow: var(--glow); position:relative; overflow:hidden;}
-    .bar::after{content:""; position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,0.4), transparent 50%, rgba(255,255,255,0.4)); animation: shimmer 2s linear infinite;}
-    @keyframes shimmer { from{transform:translateX(-100%);} to{transform:translateX(100%);} }
-
+    /* Glitch */
     .glitch { position:relative; color:var(--text); font-size: clamp(26px, 3vw, 32px); letter-spacing:.04em; filter: drop-shadow(0 0 6px rgba(35,210,255,0.35)); animation: glitch 1.4s infinite steps(2);}
     .glitch::before, .glitch::after{ content: attr(data-text); position:absolute; left:0; top:0; opacity:.75; mix-blend-mode: lighten;}
     .glitch::before{ color:#23d2ff; transform: translate(2px,-2px); }
@@ -109,20 +131,17 @@
       border-radius:16px; border:1px solid rgba(255,95,159,0.35);
       box-shadow: 0 16px 42px rgba(255,95,159,0.24);
       font-family:'Inter',sans-serif;
-      position: relative;
+      display:none;
     }
     .reveal h1{ margin:0 0 12px; font-size: clamp(30px, 5vw, 44px); color:#ffe7f2; }
     .reveal p{ margin:6px 0; color:#f9dce8; font-size: clamp(16px, 2.5vw, 20px); }
-    .buttons{
-      margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
-      position:relative; min-height:60px;
-    }
+    .buttons{ margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; position:relative; min-height:60px; }
     .btn{ border:none; padding:12px 18px; border-radius:12px; font-size:16px; cursor:pointer; color:#0b0f19; background:linear-gradient(135deg, #ff82b5, #ff5f9f); box-shadow: 0 10px 30px rgba(255,95,159,0.35); transition: transform .2s ease, box-shadow .2s ease; }
-    .btn.alt{ background:linear-gradient(135deg, #7b5bff, #23d2ff); color:#f7fbff; box-shadow: 0 10px 30px rgba(35,210,255,0.28); }
-    .btn:hover{ transform: translateY(-2px) scale(1.02); }
     .btn.ghost{ background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.08)); color: #e1e8ff; border:1px solid rgba(123,91,255,0.35); }
+    .btn:hover{ transform: translateY(-2px) scale(1.02); }
     .final{ margin-top:14px; font-size:15px; color:#ffe2ff; opacity:0; transition: opacity .5s ease; }
 
+    /* Popup */
     .popup {
       position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
       background: rgba(0,0,0,0.55); z-index: 10; opacity: 0; pointer-events: none;
@@ -132,13 +151,9 @@
     .popup-card {
       background: linear-gradient(145deg, #0e1328, #0b0f1f);
       border: 1px solid rgba(255,95,159,0.5);
-      padding: 26px 28px;
-      border-radius: 16px;
-      text-align: center;
+      padding: 26px 28px; border-radius: 16px; text-align: center;
       box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255,95,159,0.25);
-      color: #ffe7f2;
-      max-width: 480px;
-      font-family:'Inter',sans-serif;
+      color: #ffe7f2; max-width: 480px; font-family:'Inter',sans-serif;
     }
     .popup-card h3 { margin: 0 0 10px; font-size: 26px; }
     .popup-card p { margin: 6px 0; color: #f6d8e8; }
@@ -167,21 +182,6 @@
     .switch.on { background:rgba(35,210,255,0.2); }
     .switch.on::after { transform: translateX(20px); }
 
-    .chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
-    .chip { padding:8px 12px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(123,91,255,0.3); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: all .2s; }
-    .chip.active { background: linear-gradient(135deg, #23d2ff55, #7b5bff55); border-color: rgba(123,91,255,0.7); box-shadow: var(--glow); }
-    .lab-row { margin-bottom:12px; font-family:'Inter',sans-serif; color: var(--muted); }
-    .lab-row label { font-size:13px; letter-spacing:.05em; text-transform: uppercase; display:block; margin-bottom:6px; color: var(--accent2); }
-    .lab-row input[type="range"] { width:100%; accent-color: var(--accent2); }
-    .lab-row .readout { margin-top:6px; color: var(--text); font-weight:600; }
-    .lab-row input[type="text"], .lab-row select {
-      width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(123,91,255,0.25);
-      background: rgba(255,255,255,0.03); color: var(--text); font-family:'Inter',sans-serif;
-    }
-    .mini-btn { margin-top:8px; padding:10px 12px; border-radius:10px; border:1px solid rgba(123,91,255,0.35); background: linear-gradient(135deg, rgba(35,210,255,0.18), rgba(123,91,255,0.18)); color:var(--text); cursor:pointer; font-family:'Inter',sans-serif; transition: transform .2s, box-shadow .2s;}
-    .mini-btn:hover { transform: translateY(-1px); box-shadow: var(--glow); }
-    .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(123,91,255,0.35); color: var(--text); font-size:13px; }
-
     canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
     .vignette { position: fixed; inset:0; pointer-events:none; background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.35)); mix-blend-mode: soft-light; z-index:2; }
   </style>
@@ -191,13 +191,52 @@
   <canvas id="confetti"></canvas>
   <div class="vignette"></div>
 
-  <div class="frame" id="frame">
+  <!-- STAGE 1: AI intro + visual analysis -->
+  <div class="frame" id="stage1">
     <div class="grid" id="terminal">
       <div class="panel">
         <h2>AI SYSTEM // STATUS LOG</h2>
         <div class="console" id="console"></div>
       </div>
+      <div class="panel">
+        <h2>VISUAL ANALYSIS FEED</h2>
+        <div class="photos">
+          <div class="photo">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80" alt="placeholder">
+            <div class="tag">Smile detection: 100%</div>
+          </div>
+          <div class="photo">
+            <img src="https://via.placeholder.com/400x520?text=placeholder" alt="placeholder">
+            <div class="tag">Cuteness level: Critical</div>
+          </div>
+          <div class="photo">
+            <img src="https://via.placeholder.com/800x520?text=placeholder" alt="placeholder">
+            <div class="tag">Impact: Life-changing</div>
+          </div>
+          <div class="photo" style="display:flex; align-items:flex-end; justify-content:center;">
+            <div class="tag" style="width:90%;">Emotion surge meter</div>
+          </div>
+        </div>
+        <div class="meter" aria-label="Sentiment meter">
+          <span style="font-size:12px;color:var(--muted);">Emotion surge</span>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Glitch -->
+  <div class="frame" id="glitchPanel" style="display:none;">
+    <div class="panel" style="margin-top:0;">
+      <div class="glitch" data-text="Error...">Error...</div>
+      <div class="glitch" data-text="System cannot remain objective...">System cannot remain objective...</div>
+      <div class="glitch" data-text="Emotions detected...">Emotions detected...</div>
+    </div>
+  </div>
+
+  <!-- STAGE 3: everything else appears after intro completes -->
+  <div class="frame" id="stage3" style="display:none;">
+    <div class="grid" id="topRow">
       <div class="panel">
         <h2>LIVE AFFINITY RADAR</h2>
         <div class="radar-wrap"><canvas id="radar"></canvas></div>
@@ -207,9 +246,17 @@
           <div class="stat"><strong>Emotion Drift</strong><small id="driftStat">→ you</small></div>
         </div>
       </div>
+      <div class="panel">
+        <h2>CORE SENTIMENT DIAL</h2>
+        <div class="dial">
+          <div class="arc"></div>
+          <div class="arc"></div>
+          <div class="center"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="grid" style="margin-top:18px;" id="extras">
+    <div class="grid" style="margin-top:18px;">
       <div class="panel">
         <h2>HEARTLINE TELEMETRY</h2>
         <div class="wave-wrap">
@@ -270,27 +317,12 @@
 
       <div class="lab-row">
         <label>Handshake Confirmation</label>
-        <button class="btn alt" style="width:100%;" id="handshakeBtn">Initiate Digital Handshake 🤝</button>
+        <button class="btn" style="width:100%; background:linear-gradient(135deg, #7b5bff, #23d2ff);" id="handshakeBtn">Initiate Digital Handshake 🤝</button>
         <div class="pill" id="handshakeStatus">Status: pending handshake</div>
       </div>
     </div>
 
-    <div class="panel" id="glitchPanel" style="margin-top:18px; display:none;">
-      <div class="glitch" data-text="Error...">Error...</div>
-      <div class="glitch" data-text="System cannot remain objective...">System cannot remain objective...</div>
-      <div class="glitch" data-text="Emotions detected...">Emotions detected...</div>
-    </div>
-
-    <div class="panel" id="dialPanel" style="margin-top:18px; display:none; text-align:center;">
-      <h2>CORE SENTIMENT DIAL</h2>
-      <div class="dial">
-        <div class="arc"></div>
-        <div class="arc"></div>
-        <div class="center"></div>
-      </div>
-    </div>
-
-    <div class="reveal" id="reveal" style="display:none; margin-top:18px;">
+    <div class="reveal" id="reveal" style="margin-top:18px;">
       <h1>Will you be my girlfriend?</h1>
       <p>This AI is done pretending.</p>
       <p>It’s only me—completely yours.</p>
@@ -306,12 +338,17 @@
     <div class="popup-card">
       <h3>Romantic Payload Delivered</h3>
       <p>You just made my whole timeline brighter.</p>
-      <p>I promise to keep your smile as my favorite dataset forever.</p>
+      <p>I promise to guard your smile as my favorite dataset forever.</p>
       <button onclick="closePopup()">Aww 💝</button>
     </div>
   </div>
 
   <script>
+    /* STAGE CONTROL */
+    const stage1 = document.getElementById('stage1');
+    const glitchPanel = document.getElementById('glitchPanel');
+    const stage3 = document.getElementById('stage3');
+
     /* Status log typewriter */
     const lines = [
       "Initializing system...",
@@ -320,14 +357,16 @@
       "Scanning subject...",
       "Analyzing smile patterns...",
       "Assessing heart-rate variability...",
-      "Forecasting life trajectory...",
       "Processing feelings...",
       "Conclusion pending..."
     ];
     const consoleEl = document.getElementById('console');
     let line=0, idx=0;
     function typeLine(){
-      if(line >= lines.length){ setTimeout(triggerGlitch, 900); return; }
+      if(line >= lines.length){
+        setTimeout(triggerGlitch, 900);
+        return;
+      }
       const current = lines[line];
       consoleEl.innerHTML = lines.slice(0,line).join("<br>") + "<br>" + current.slice(0,idx) + '<span class="cursor"></span>';
       idx++;
@@ -339,6 +378,23 @@
     }
     setTimeout(typeLine, 450);
 
+    function triggerGlitch(){
+      // hide stage1, show glitch briefly, then stage3
+      stage1.style.display = 'none';
+      glitchPanel.style.display = 'block';
+      setTimeout(()=>{
+        glitchPanel.style.display = 'none';
+        stage3.style.display = 'block';
+        showReveal(); // bring in reveal after stage3 shows
+      }, 2200);
+    }
+
+    function showReveal(){
+      const reveal = document.getElementById('reveal');
+      reveal.style.display = 'block';
+      reveal.animate([{opacity:0, filter:'blur(8px)'},{opacity:1, filter:'blur(0)'}], {duration:800, easing:'ease-out'});
+    }
+
     /* Affinity radar */
     const radar = document.getElementById('radar');
     const rctx = radar.getContext('2d');
@@ -349,8 +405,8 @@
       jitter: (Math.random()-0.5)*0.0005
     }));
     function resizeRadar(){
-      radar.width = radar.clientWidth;
-      radar.height = radar.clientHeight;
+      radar.width = radar.clientWidth || 300;
+      radar.height = radar.clientHeight || 300;
     }
     window.addEventListener('resize', resizeRadar); resizeRadar();
     let sweep = 0;
@@ -419,7 +475,7 @@
     /* Waveform */
     const waveCanvas = document.getElementById('wave');
     const wctx = waveCanvas.getContext('2d');
-    function resizeWave(){ waveCanvas.width = waveCanvas.parentElement.clientWidth; waveCanvas.height = 140; }
+    function resizeWave(){ waveCanvas.width = waveCanvas.parentElement.clientWidth || 400; waveCanvas.height = 140; }
     window.addEventListener('resize', resizeWave); resizeWave();
     let t=0;
     function drawWave(){
@@ -471,33 +527,12 @@
       '<div class="event"><div class="dot"></div><div><strong>Objectivity breach</strong><br><small>Emotion packets overflow</small></div></div>'
     ), 3200);
 
-    function triggerGlitch(){
-      document.getElementById('glitchPanel').style.display = 'block';
-      document.getElementById('dialPanel').style.display = 'block';
-      const term = document.getElementById('terminal');
-      term.style.filter = 'blur(4px)';
-      term.style.transform = 'scale(0.98)';
-      setTimeout(()=>{
-        term.style.display = 'none';
-        document.getElementById('glitchPanel').style.display = 'none';
-        document.getElementById('dialPanel').style.display = 'none';
-        showReveal();
-      }, 2600);
-    }
-
-    function showReveal(){
-      const reveal = document.getElementById('reveal');
-      reveal.style.display = 'block';
-      reveal.animate([{opacity:0, filter:'blur(8px)'},{opacity:1, filter:'blur(0)'}], {duration:800, easing:'ease-out'});
-    }
-
     /* Confetti hearts */
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
     let particles=[];
     function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
     window.addEventListener('resize', resize); resize();
-
     function celebrate(){
       document.getElementById('finalMsg').style.opacity = 1;
       spawnConfetti();
@@ -544,8 +579,7 @@
 
     document.addEventListener('keydown', (e)=>{
       if(e.key === 'Enter' && document.getElementById('reveal').style.display === 'block'){
-        celebrate();
-        openPopup();
+        celebrate(); openPopup();
       }
       if(e.key.toLowerCase() === 'l'){ celebrate(); openPopup(); }
     });
@@ -610,8 +644,8 @@
       const rect = btnWrap.getBoundingClientRect();
       const maxX = rect.width - noBtn.offsetWidth;
       const maxY = rect.height - noBtn.offsetHeight;
-      const x = Math.random() * maxX - rect.width/4;
-      const y = Math.random() * maxY - rect.height/4;
+      const x = (Math.random() * maxX) - rect.width/3;
+      const y = (Math.random() * maxY) - rect.height/3;
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
     }
     ['mouseenter','click','touchstart','mousemove'].forEach(ev=>{
